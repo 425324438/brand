@@ -1,21 +1,17 @@
 package com.cn.brand.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.brand.Utile.BreanUtils;
-import com.cn.brand.chche.RoomChche;
+import com.cn.brand.Util.BreanUtils;
 import com.cn.brand.constant.BrandSendSocketMsgType;
-import com.cn.brand.enums.BrandTypeEnum;
 import com.cn.brand.model.Brand;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
 import com.cn.brand.service.BrandService;
 import com.cn.brand.service.RoomService;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import java.io.IOException;
 import java.util.ArrayList;

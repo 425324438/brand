@@ -46,6 +46,14 @@ public interface RoomService {
     boolean outRoom(Room room, User user);
 
     /**
+     * 抢地主
+     * @param roomId
+     * @param userId
+     * @param multiple
+     */
+    void robLandlord(String roomId, String userId, Integer multiple);
+
+    /**
      * 房间内 socket 通知
      * @param type 通知类型，前端socket 接收后 判断用
      * @param msg 通知内容 service 不做处理 直接发到客户端

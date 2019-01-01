@@ -11,14 +11,7 @@ import com.cn.brand.socket.SockerServer;
 import com.cn.brand.socket.service.SockerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author: ylshi@ronglian.com
@@ -43,10 +36,8 @@ public class RoomController {
      */
     @PostMapping("createRoom/{userId}")
     public ApiResult createRoom(@PathVariable("userId") String userId, String roomName){
-
         ApiResult result = ApiResult.error();
         try {
-
             User user = SockerServer.users.get(userId);
 
             Room room = roomService.createRoom(user, roomName + (int)(Math.floor(Math.random() * 10000) + 10000));
@@ -75,7 +66,6 @@ public class RoomController {
     @GetMapping("roomList")
     public ApiResult roomList(){
         ApiResult result = ApiResult.error();
-
         try {
             result = ApiResult.success();
             JSONArray rooms = roomService.roomList();
@@ -85,7 +75,6 @@ public class RoomController {
             log.error(e.toString() ,e);
             result.setMsg(e.getMessage());
         }
-
         return result;
     }
 
@@ -154,7 +143,7 @@ public class RoomController {
             result.setdata(outRoom);
 
         } catch (Exception e){
-            log.error(e.toString());
+            log.error(e.getMessage(), e);
             result = ApiResult.error(e.getMessage());
         }
 

@@ -1,4 +1,4 @@
-package com.cn.brand.Utile;
+package com.cn.brand.Util;
 
 import com.cn.brand.model.Brand;
 

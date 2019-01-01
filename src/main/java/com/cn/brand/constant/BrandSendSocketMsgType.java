@@ -16,4 +16,9 @@ public class BrandSendSocketMsgType {
      * 用户同意发牌
      */
     public static final String LICENSING = "licensing";
+
+    /**
+     * 抢地主
+     */
+    public static final String LANDLORD = "landlord";
 }

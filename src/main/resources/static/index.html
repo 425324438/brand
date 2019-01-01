@@ -39,20 +39,28 @@
     <button type="button" onclick="createRoom()"> 创建房间</button>
     <button type="button" onclick="outRoom()"> 退出房间</button>
     <button type="button" onclick="licensing()"> 开始发牌</button>
-    <button type="button" onclick="">抢地主</button>
+    <input id="multiple" type="text" value="1" placeholder="押注倍率">
+    <button type="button" onclick="landlord()">抢地主</button>
     <div>
         <p>
             <span>房间：</span>
             <span id="addRoomName"></span>
         </p>
         <div>
+            <p>底牌公示区域</p>
+            <div class="layui-fluid">
+                <div class="layui-row layui-col-space5" id="bottomBrand">
+                </div>
+            </div>
+        </div>
+        <div>
             <p>手中的牌</p>
-
             <div class="layui-fluid">
                 <div class="layui-row layui-col-space5" id="brandList">
                 </div>
             </div>
         </div>
+
     </div>
 
 

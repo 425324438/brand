@@ -1,14 +1,20 @@
 package com.cn.brand.socket;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.brand.Util.SpringUtil;
+import com.cn.brand.constant.BrandSendSocketMsgType;
 import com.cn.brand.model.User;
+import com.cn.brand.service.RoomService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.springframework.stereotype.Component;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
@@ -17,8 +23,8 @@ import java.util.concurrent.CopyOnWriteArraySet;
  * @Date: 2018/12/30 16:35
  * @Description:
  */
+@Controller
 @ServerEndpoint(value = "/websocket")
-@Component
 public class SockerServer {
     protected static Log logger = LogFactory.getLog(SockerServer.class);
 
@@ -26,14 +32,12 @@ public class SockerServer {
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
      */
     private static volatile int onlineCount = 0;
-
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
      */
     public static CopyOnWriteArraySet<SockerServer> webSocketSet = new CopyOnWriteArraySet<SockerServer>();
 
     public static Map<String, User> users = new ConcurrentHashMap<>();
-
     /**
      * 存储socket Session，Session ID为键
      */
@@ -44,6 +48,9 @@ public class SockerServer {
      */
     private Session session;
 
+
+    @Autowired
+    private RoomService roomService = (RoomService)SpringUtil.getBean("roomService");
     /**
      * 连接建立成功调用的方法
      */
@@ -81,12 +88,25 @@ public class SockerServer {
         JSONObject jsonObject = JSONObject.parseObject(message);
 
         try {
-            SockerServer myWebSocket = map.get(session.getId());
-            if (session == myWebSocket.session) {
-                myWebSocket.sendMessage("");
+            String type = jsonObject.getString("type");
+            switch (type){
+                case BrandSendSocketMsgType.LANDLORD:
+                    String roomId = jsonObject.getString("roomId");
+                    String userId = jsonObject.getString("userId");
+                    Integer multiple = jsonObject.getInteger("multiple");
+
+                    roomService.robLandlord(roomId, userId, multiple);
+                    break;
+                    default:
+                        break;
             }
+
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
+            SockerServer sockerServer = map.get(session.getId());
+            if(sockerServer.session == session){
+                sockerServer.sendMessage("请求失败："+ e.toString());
+            }
         }
 
     }
@@ -166,5 +186,20 @@ public class SockerServer {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o){
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()){
+            return false;
+        }
+        SockerServer that = (SockerServer) o;
+        return Objects.equals(session, that.session) && Objects.equals(roomService, that.roomService);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(session, roomService);
+    }
 }

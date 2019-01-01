@@ -22,6 +22,15 @@ public class User {
     private String userName;
 
     private boolean master;
+    /**
+     * 倍率
+     */
+    private Integer multiple;
+
+    /**
+     * true ：地主
+     */
+    private boolean landlord;
 
     private boolean licensing;
 
