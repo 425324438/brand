@@ -14,10 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author: ylshi@ronglian.com
@@ -32,6 +29,12 @@ public class BrandServiceImpl implements BrandService {
     @Autowired
     private RoomService roomService;
 
+    /**
+     * 发牌
+     * @param room
+     * @param userId
+     * @throws IOException
+     */
     @Override
     public void licensing(Room room,String userId) throws IOException {
         userLicensing(room, userId);
@@ -72,6 +75,32 @@ public class BrandServiceImpl implements BrandService {
     }
 
     /**
+     * 操作顺序
+     * 第一个操作的人是房间主人
+     * @param room
+     */
+    @Override
+    public void roomSequence(Room room) {
+        JSONObject json = new JSONObject();
+
+        if(room.getCurrentUser() == null){
+            room.setCurrentUser(room.getMasterUser());
+        } else {
+            Iterator<User> iterator = room.getUsers().iterator();
+            while (iterator.hasNext()){
+                User user = iterator.next();
+                if(room.getCurrentUser().getId().equals(user.getId())){
+                    room.setCurrentUser(iterator.next());
+                }
+            }
+        }
+
+        json.put("sequenceUserId", room.getCurrentUser().getId());
+
+        roomService.sendRoomMessage(room, BrandSendSocketMsgType.ROOM_SEQUENCE, json);
+    }
+
+    /**
      * 用户同意发牌
      */
     private void userLicensing(Room room,String userId){
@@ -84,7 +113,6 @@ public class BrandServiceImpl implements BrandService {
             }
         });
         roomService.sendRoomMessage(room,BrandSendSocketMsgType.LICENSING,json);
-
         room.setUsers(users);
     }
 

@@ -21,4 +21,9 @@ public class BrandSendSocketMsgType {
      * 抢地主
      */
     public static final String LANDLORD = "landlord";
+
+    /**
+     * 房间操作顺序
+     */
+    public static final String ROOM_SEQUENCE = "roomSequence";
 }

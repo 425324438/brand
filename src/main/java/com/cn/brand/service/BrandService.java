@@ -22,5 +22,11 @@ public interface BrandService {
      */
     void licensing(Room room,String userId) throws IOException;
 
+    /**
+     * 出牌顺序
+     * 发完牌之后调用一次，返回给前端确定哪个用户最先操作【抢地主】按钮
+     * 抢地主完成之后，地主先出牌，每次用户出牌之后由此函数决定该哪位用户出牌
+     */
+    void roomSequence(Room room);
 
 }

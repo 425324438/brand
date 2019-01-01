@@ -22,6 +22,11 @@ public class Room {
 
     private User masterUser;
 
+    /**
+     * 当前操作用户
+     */
+    private User currentUser;
+
     private List<User> users;
 
     /**
