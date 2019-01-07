@@ -2,7 +2,9 @@ package com.cn.brand.socket;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.brand.Util.SpringUtil;
+import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.BrandSendSocketMsgType;
+import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
 import com.cn.brand.service.RoomService;
 import org.apache.commons.logging.Log;
@@ -78,7 +80,7 @@ public class SockerServer {
             sendMessage(JSONObject.toJSONString(json));
 
         } catch (Exception e) {
-            System.out.println("IO异常");
+            logger.error(e.getMessage(), e);
         }
     }
 
@@ -90,11 +92,14 @@ public class SockerServer {
         try {
             String type = jsonObject.getString("type");
             switch (type){
+                // 抢地主
                 case BrandSendSocketMsgType.LANDLORD:
                     String roomId = jsonObject.getString("roomId");
                     String userId = jsonObject.getString("userId");
                     Integer multiple = jsonObject.getInteger("multiple");
 
+                    Room room = RoomChche.roomMap.get(roomId);
+//                    roomService.sendRoomMessage(room, );
                     roomService.robLandlord(roomId, userId, multiple);
                     break;
                     default:
@@ -108,7 +113,6 @@ public class SockerServer {
                 sockerServer.sendMessage("请求失败："+ e.toString());
             }
         }
-
     }
 
     /**

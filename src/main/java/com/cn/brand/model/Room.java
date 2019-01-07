@@ -30,6 +30,10 @@ public class Room {
     private List<User> users;
 
     /**
+     * 倍率
+     */
+    private Integer multiple;
+    /**
      * 保留三张底牌
      */
     private List<Brand> bottomBrand;

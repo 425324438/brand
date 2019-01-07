@@ -23,7 +23,7 @@ websocket.onopen = function(event){
 //接收到消息的回调方法
 websocket.onmessage = function(event){
     console.log("收到消息："+ event.data);
-    layer.msg('收到socket消息：'+ event.data , { icon:1,offset: ['20%', '60%']});
+    layer.msg('收到socket消息：'+ event.data , { icon:1, offset: ['20%', '60%'], time: 2000 * 200 });
     var obj = JSON.parse(event.data);
     if(obj.sessionId !== undefined ){
         sessionStorage.sessionKey = obj.sessionId;

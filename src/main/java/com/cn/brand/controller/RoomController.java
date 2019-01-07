@@ -132,15 +132,17 @@ public class RoomController {
             User user = SockerServer.users.get(userId);
             Room room = RoomChche.roomMap.get(roomId);
 
-            boolean outRoom = roomService.outRoom(room, user);
-            if (outRoom){
-                //退出通知
-                JSONObject json = new JSONObject();
-                json.put("userId", user.getId());
-                json.put("userName", user.getUserName());
-                roomService.sendRoomMessage(room,"outRoom",json);
+            if(room != null){
+                boolean outRoom = roomService.outRoom(room, user);
+                if (outRoom){
+                    //退出通知
+                    JSONObject json = new JSONObject();
+                    json.put("userId", user.getId());
+                    json.put("userName", user.getUserName());
+                    roomService.sendRoomMessage(room,"outRoom",json);
+                }
+                result.setdata(outRoom);
             }
-            result.setdata(outRoom);
 
         } catch (Exception e){
             log.error(e.getMessage(), e);
