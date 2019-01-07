@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.cn.brand.Util.SpringUtil;
 import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.BrandSendSocketMsgType;
+import com.cn.brand.constant.RoomSendSocketMsgType;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
 import com.cn.brand.service.RoomService;
@@ -99,7 +100,10 @@ public class SockerServer {
                     Integer multiple = jsonObject.getInteger("multiple");
 
                     Room room = RoomChche.roomMap.get(roomId);
-//                    roomService.sendRoomMessage(room, );
+                    JSONObject msg = new JSONObject();
+                    msg.put("userId", userId);
+                    msg.put("multiple", multiple);
+                    roomService.sendRoomMessage(room, RoomSendSocketMsgType.ROOM_MSG ,msg);
                     roomService.robLandlord(roomId, userId, multiple);
                     break;
                     default:

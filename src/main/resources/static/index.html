@@ -18,6 +18,18 @@
         .layui-row div {
             background-color : #63BA79;
         }
+        .brandList{
+            float: left;
+            background: #fff;
+            width: 100px;
+        }
+        .brandList:hover {
+            margin-top : -10px;
+        }
+        .brandList:active {
+            margin-top : -10px;
+            background: aquamarine;
+        }
     </style>
 </head>
 <body>
@@ -40,7 +52,7 @@
     <button type="button" onclick="outRoom()"> 退出房间</button>
     <button type="button" onclick="licensing()"> 开始发牌</button>
     <input id="multiple" type="text" value="1" placeholder="押注倍率">
-    <button type="button" onclick="landlord()">抢地主</button>
+    <button type="button" class="btn btn-default btn-lg" onclick="landlord(this)">抢地主</button>
     <div>
         <p>
             <span>房间：</span>
@@ -56,8 +68,11 @@
         <div>
             <p>手中的牌</p>
             <div class="layui-fluid">
-                <div class="layui-row layui-col-space5" id="brandList">
-                </div>
+                <!--<div class="layui-row layui-col-space5" id="brandList">-->
+                <!--</div>-->
+                <ul id="brandList" style="position: absolute;">
+
+                </ul>
             </div>
         </div>
 

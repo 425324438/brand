@@ -70,12 +70,13 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public boolean outRoom(Room room, User user) {
+        RoomChche.userRoom.remove(user.getId());
         List<User> users = room.getUsers();
         users.remove(user);
         room.setUsers(users);
 
         RoomChche.roomMap.put(room.getId(), room);
-        RoomChche.userRoom.remove(user.getId());
+
         return false;
     }
 

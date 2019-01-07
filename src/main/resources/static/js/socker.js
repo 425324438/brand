@@ -23,7 +23,7 @@ websocket.onopen = function(event){
 //接收到消息的回调方法
 websocket.onmessage = function(event){
     console.log("收到消息："+ event.data);
-    layer.msg('收到socket消息：'+ event.data , { icon:1, offset: ['20%', '60%'], time: 2000 * 200 });
+    layer.msg('收到socket消息：'+ event.data , { icon:1, offset: ['20%', '60%'] });
     var obj = JSON.parse(event.data);
     if(obj.sessionId !== undefined ){
         sessionStorage.sessionKey = obj.sessionId;
@@ -36,17 +36,29 @@ websocket.onmessage = function(event){
     if(obj.type === 'licensingAction'){
         $(obj.brands).each(function (index, brand) {
 
-            var html = '<div class="layui-col-sm3">\n' +
-                '            <div class="grid-demo grid-demo-bg1">' +
-                '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
-                '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
-                '                  <div class="layui-card-body">\n' +
+            // var html = '<div class="layui-col-sm3">\n' +
+            //     '            <div class="grid-demo grid-demo-bg1">' +
+            //     '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
+            //     '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
+            //     '                  <div class="layui-card-body">\n' +
+            //     '                    type=<span>'+ brand.type +'</span><br>\n' +
+            //     '                    var= <spa>'+ brand.val +'</spa>\n' +
+            //     '                  </div>\n' +
+            //     '                </div>' +
+            //     '</div>\n' +
+            //     '            </div>';
+
+            var html = '<li class="brandList">\n' +
+                '            <div class="">' +
+                '<div class="" style="border: 1px black solid; height: 100px;">\n' +
+                '                  <div class="">id=：<span>'+ brand.id +'</span></div>\n' +
+                '                  <div class="">\n' +
                 '                    type=<span>'+ brand.type +'</span><br>\n' +
                 '                    var= <spa>'+ brand.val +'</spa>\n' +
                 '                  </div>\n' +
                 '                </div>' +
                 '</div>\n' +
-                '            </div>';
+                '            </li>';
             $('#brandList').append(html);
         });
     }
@@ -55,17 +67,28 @@ websocket.onmessage = function(event){
         //地主的牌
         if(obj.msg.IsLandlordUserId === sessionStorage.sessionKey){
             $(obj.msg.bottomBrand).each(function (index, brand) {
-                var html = '<div class="layui-col-sm3">\n' +
-                    '            <div class="grid-demo grid-demo-bg1">' +
-                    '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
-                    '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
-                    '                  <div class="layui-card-body">\n' +
+                // var html = '<div class="layui-col-sm3">\n' +
+                //     '            <div class="grid-demo grid-demo-bg1">' +
+                //     '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
+                //     '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
+                //     '                  <div class="layui-card-body">\n' +
+                //     '                    type=<span>'+ brand.type +'</span><br>\n' +
+                //     '                    var= <spa>'+ brand.val +'</spa>\n' +
+                //     '                  </div>\n' +
+                //     '                </div>' +
+                //     '</div>\n' +
+                //     '            </div>';
+                var html = '<li class="">\n' +
+                    '            <div class="">' +
+                    '<div class="" style="border: 1px black solid; height: 100px;">\n' +
+                    '                  <div class="">id=：<span>'+ brand.id +'</span></div>\n' +
+                    '                  <div class="">\n' +
                     '                    type=<span>'+ brand.type +'</span><br>\n' +
                     '                    var= <spa>'+ brand.val +'</spa>\n' +
                     '                  </div>\n' +
                     '                </div>' +
                     '</div>\n' +
-                    '            </div>';
+                    '            </li>';
                 $('#brandList').append(html);
             });
         }
@@ -84,8 +107,7 @@ websocket.onmessage = function(event){
                 '            </div>';
             $('#bottomBrand').append(html);
         });
-
-
+        loadBrands();
     }
 
 };
@@ -113,7 +135,8 @@ function closeWebSocket(){
 /**
  * 抢地主
  */
-function landlord() {
+function landlord(_this) {
+    $(_this).button('reset');
     var json = {};
     json.type = 'landlord';
     json.roomId = sessionStorage.roomKey;
