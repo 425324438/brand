@@ -71,6 +71,7 @@ public class BrandServiceImpl implements BrandService {
                 json.put("brands", brands);
                 user.getSockerServer().sendMessage(JSONObject.toJSONString(json));
             });
+            roomSequence(room);
         }
     }
 

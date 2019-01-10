@@ -1,0 +1,46 @@
+a {
+    text-decoration: none;
+}
+.layui-row div {
+    background-color : #63BA79;
+}
+.brandList{
+    float: left;
+    background: #fff;
+    width: 100px;
+}
+.brandList:hover {
+    margin-top : -10px;
+}
+.brandList:active {
+    margin-top : -10px;
+    background: aquamarine;
+}
+.room-msg {
+    background-color: black;
+    opacity:0.4;
+    width: 500px;
+    height: 400px;
+    float: left;
+    position: fixed;
+    bottom: 5px;
+    left: 5px;
+    z-index: 999;
+}
+.room-msg input{
+    width: 86%;
+    float: left;
+}
+.room-msg .msg{
+    width: 500px;
+    height: 90%;
+}
+.room-msg .msg p{
+    color: #FFFFFF;
+}
+.room-msg .msg b{
+    color: #FFFFFF;
+}
+.room-msg .bottom{
+    text-align: end;
+}

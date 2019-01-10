@@ -1,13 +1,19 @@
 
 $(function (e) {
     $(window).bind('beforeunload', function(){
-        //退出房间
-        outRoom();
-        //页面刷新是 清空
-        sessionStorage.clear();
+        out();
         return true;
     });
+
 });
+
+function out(){
+    //页面刷新是 清空
+    sessionStorage.clear();
+    //退出房间
+    outRoom();
+
+}
 
 getRoomList();
 /**

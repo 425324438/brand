@@ -24,6 +24,8 @@ websocket.onopen = function(event){
 websocket.onmessage = function(event){
     console.log("收到消息："+ event.data);
     layer.msg('收到socket消息：'+ event.data , { icon:1, offset: ['20%', '60%'] });
+    msg(event);
+
     var obj = JSON.parse(event.data);
     if(obj.sessionId !== undefined ){
         sessionStorage.sessionKey = obj.sessionId;
@@ -35,19 +37,6 @@ websocket.onmessage = function(event){
     //开始发牌
     if(obj.type === 'licensingAction'){
         $(obj.brands).each(function (index, brand) {
-
-            // var html = '<div class="layui-col-sm3">\n' +
-            //     '            <div class="grid-demo grid-demo-bg1">' +
-            //     '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
-            //     '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
-            //     '                  <div class="layui-card-body">\n' +
-            //     '                    type=<span>'+ brand.type +'</span><br>\n' +
-            //     '                    var= <spa>'+ brand.val +'</spa>\n' +
-            //     '                  </div>\n' +
-            //     '                </div>' +
-            //     '</div>\n' +
-            //     '            </div>';
-
             var html = '<li class="brandList">\n' +
                 '            <div class="">' +
                 '<div class="" style="border: 1px black solid; height: 100px;">\n' +
@@ -67,17 +56,6 @@ websocket.onmessage = function(event){
         //地主的牌
         if(obj.msg.IsLandlordUserId === sessionStorage.sessionKey){
             $(obj.msg.bottomBrand).each(function (index, brand) {
-                // var html = '<div class="layui-col-sm3">\n' +
-                //     '            <div class="grid-demo grid-demo-bg1">' +
-                //     '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
-                //     '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
-                //     '                  <div class="layui-card-body">\n' +
-                //     '                    type=<span>'+ brand.type +'</span><br>\n' +
-                //     '                    var= <spa>'+ brand.val +'</spa>\n' +
-                //     '                  </div>\n' +
-                //     '                </div>' +
-                //     '</div>\n' +
-                //     '            </div>';
                 var html = '<li class="">\n' +
                     '            <div class="">' +
                     '<div class="" style="border: 1px black solid; height: 100px;">\n' +
