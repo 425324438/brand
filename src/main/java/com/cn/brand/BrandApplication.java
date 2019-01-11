@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author 暮色听雨声
+ * @date 2019/1/11
+ */
 @SpringBootApplication
 @RestController
 public class BrandApplication {

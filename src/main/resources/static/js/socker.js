@@ -24,15 +24,15 @@ websocket.onopen = function(event){
 websocket.onmessage = function(event){
     console.log("收到消息："+ event.data);
     layer.msg('收到socket消息：'+ event.data , { icon:1, offset: ['20%', '60%'] });
-    msg(event);
-
     var obj = JSON.parse(event.data);
     if(obj.sessionId !== undefined ){
         sessionStorage.sessionKey = obj.sessionId;
     }
+    msg(event);
+
     //创建房间
     if(obj.type === 'createRoom'){
-        $('#roomList').append('<dd><a class="addRoom"  onclick="addRoom(this)" ><span data-id="'+ obj.roomId +'">'+ obj.roomName +'</span></a></dd>');
+        $('#roomList').append('<dd id="'+ obj.roomId +'"><a class="addRoom"  onclick="addRoom(this)" ><span data-id="'+ obj.roomId +'">'+ obj.roomName +'</span></a></dd>');
     }
     //开始发牌
     if(obj.type === 'licensingAction'){
@@ -43,7 +43,7 @@ websocket.onmessage = function(event){
                 '                  <div class="">id=：<span>'+ brand.id +'</span></div>\n' +
                 '                  <div class="">\n' +
                 '                    type=<span>'+ brand.type +'</span><br>\n' +
-                '                    var= <spa>'+ brand.val +'</spa>\n' +
+                '                    val= <spa>'+ brand.val +'</spa>\n' +
                 '                  </div>\n' +
                 '                </div>' +
                 '</div>\n' +
@@ -56,13 +56,13 @@ websocket.onmessage = function(event){
         //地主的牌
         if(obj.msg.IsLandlordUserId === sessionStorage.sessionKey){
             $(obj.msg.bottomBrand).each(function (index, brand) {
-                var html = '<li class="">\n' +
+                var html = '<li class="brandList">\n' +
                     '            <div class="">' +
                     '<div class="" style="border: 1px black solid; height: 100px;">\n' +
                     '                  <div class="">id=：<span>'+ brand.id +'</span></div>\n' +
                     '                  <div class="">\n' +
                     '                    type=<span>'+ brand.type +'</span><br>\n' +
-                    '                    var= <spa>'+ brand.val +'</spa>\n' +
+                    '                    val= <spa>'+ brand.val +'</spa>\n' +
                     '                  </div>\n' +
                     '                </div>' +
                     '</div>\n' +
@@ -78,14 +78,13 @@ websocket.onmessage = function(event){
                 '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
                 '                  <div class="layui-card-body">\n' +
                 '                    type=<span>'+ brand.type +'</span><br>\n' +
-                '                    var= <spa>'+ brand.val +'</spa>\n' +
+                '                    val= <spa>'+ brand.val +'</spa>\n' +
                 '                  </div>\n' +
                 '                </div>' +
                 '</div>\n' +
                 '            </div>';
             $('#bottomBrand').append(html);
         });
-        loadBrands();
     }
 
 };
@@ -122,4 +121,5 @@ function landlord(_this) {
     json.multiple = $('#multiple').val();
 
     websocket.send(JSON.stringify(json));
+    $(_this).attr('disabled', 'disabled');
 }

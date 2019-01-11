@@ -44,6 +44,11 @@ function getRoomList() {
  * 创建房间
  */
 function createRoom() {
+    //判断当然用户是否 在房间内
+    if(sessionStorage.roomKey != null){
+        layer.msg('请先退出房间后再进行创建：' , { icon:1});
+        return false;
+    }
     var name = $('#roomName').val();
     $.ajax({
         type : 'POST',

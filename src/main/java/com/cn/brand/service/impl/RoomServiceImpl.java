@@ -9,7 +9,9 @@ import com.cn.brand.model.Brand;
 import com.cn.brand.model.Brands;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
+import com.cn.brand.service.BrandService;
 import com.cn.brand.service.RoomService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -24,6 +26,8 @@ import java.util.concurrent.ConcurrentHashMap;
 @Service("roomService")
 public class RoomServiceImpl implements RoomService {
 
+    @Autowired
+    private BrandService brandService;
 
     @Override
     public Room createRoom(User user, String roomName) {
@@ -75,9 +79,13 @@ public class RoomServiceImpl implements RoomService {
         users.remove(user);
         room.setUsers(users);
 
-        RoomChche.roomMap.put(room.getId(), room);
+        if(CollectionUtils.isEmpty(room.getUsers())){
+            RoomChche.roomMap.remove(room);
+        } else {
+            RoomChche.roomMap.put(room.getId(), room);
+        }
 
-        return false;
+        return true;
     }
 
     @Override
@@ -125,7 +133,7 @@ public class RoomServiceImpl implements RoomService {
         }
 
         sendRoomMessage(room, BrandSendSocketMsgType.LANDLORD,jsonObject);
-
+        brandService.roomSequence(room);
     }
 
 

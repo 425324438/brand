@@ -3,6 +3,7 @@ package com.cn.brand.controller;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.brand.chche.RoomChche;
+import com.cn.brand.constant.RoomSendSocketMsgType;
 import com.cn.brand.model.ApiResult;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
@@ -140,6 +141,16 @@ public class RoomController {
                     json.put("userId", user.getId());
                     json.put("userName", user.getUserName());
                     roomService.sendRoomMessage(room,"outRoom",json);
+                    boolean containsKey = RoomChche.roomMap.containsKey(roomId);
+
+                    //如果房间不存在了，就通知前端删除掉
+                    if(! containsKey){
+                        JSONObject remove = new JSONObject();
+                        remove.put("type", RoomSendSocketMsgType.REMOVE_ROOM);
+                        remove.put("roomId", room.getId());
+                        remove.put("msg", "删除房间");
+                        SockerServer.sendInfo(JSONObject.toJSON(remove).toString());
+                    }
                 }
                 result.setdata(outRoom);
             }

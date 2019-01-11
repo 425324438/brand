@@ -7,12 +7,14 @@ function msg(event) {
         $('#room_msg').append(html);
 
     } else if(obj.type === undefined){
-        $('#userDetail').append('用户ID'+obj.sessionId);
+        $('#userDetail').append('用户ID：'+obj.sessionId);
 
     } else if(obj.type === 'roomSequence'){
-        if(obj.sequenceUserId === sessionStorage.sessionKey){
+        if(obj.msg.sequenceUserId === sessionStorage.sessionKey){
             $('#robLandlord').removeAttr('disabled');
         }
+        var html = '<p><b>系统：</b>【顺序操作】用户ID：'+ obj.msg.sequenceUserId +'</p>';
+        $('#room_msg').append(html);
     }
 
     else {
@@ -20,4 +22,10 @@ function msg(event) {
     }
 
     $("#room_msg").getNiceScroll().resize();
+    setPos();
+}
+
+function setPos() {
+    var div = document.getElementById('room_msg');
+    div.scrollTop = div.scrollHeight;
 }
