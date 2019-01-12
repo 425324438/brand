@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.RoomSendSocketMsgType;
+import com.cn.brand.constant.UserSocketMsgType;
 import com.cn.brand.model.ApiResult;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
@@ -39,7 +40,7 @@ public class RoomController {
     public ApiResult createRoom(@PathVariable("userId") String userId, String roomName){
         ApiResult result = ApiResult.error();
         try {
-            User user = SockerServer.users.get(userId);
+            User user = RoomChche.users.get(userId);
 
             Room room = roomService.createRoom(user, roomName + (int)(Math.floor(Math.random() * 10000) + 10000));
             RoomChche.roomMap.put(room.getId(), room);
@@ -91,9 +92,9 @@ public class RoomController {
         ApiResult result = ApiResult.error();
         try {
             result = ApiResult.success();
-            User user = SockerServer.users.get(userId);
+            User user = RoomChche.users.get(userId);
             Room room = RoomChche.roomMap.get(roomId);
-            if(room.getUsers().size() > 3){
+            if(room.getUsers().size() == 3){
                 result = ApiResult.error("房间人数已满");
             } else {
                 boolean addRoom = roomService.addRoom(room, user);
@@ -130,10 +131,10 @@ public class RoomController {
         ApiResult result = ApiResult.error();
 
         try {
-            User user = SockerServer.users.get(userId);
+            User user = RoomChche.users.get(userId);
             Room room = RoomChche.roomMap.get(roomId);
 
-            if(room != null){
+            if(room != null && user != null){
                 boolean outRoom = roomService.outRoom(room, user);
                 if (outRoom){
                     //退出通知
@@ -141,16 +142,7 @@ public class RoomController {
                     json.put("userId", user.getId());
                     json.put("userName", user.getUserName());
                     roomService.sendRoomMessage(room,"outRoom",json);
-                    boolean containsKey = RoomChche.roomMap.containsKey(roomId);
 
-                    //如果房间不存在了，就通知前端删除掉
-                    if(! containsKey){
-                        JSONObject remove = new JSONObject();
-                        remove.put("type", RoomSendSocketMsgType.REMOVE_ROOM);
-                        remove.put("roomId", room.getId());
-                        remove.put("msg", "删除房间");
-                        SockerServer.sendInfo(JSONObject.toJSON(remove).toString());
-                    }
                 }
                 result.setdata(outRoom);
             }
@@ -160,6 +152,37 @@ public class RoomController {
             result = ApiResult.error(e.getMessage());
         }
 
+        return result;
+    }
+
+    /**
+     * 用户断开连接
+     * @param roomId
+     * @param userId
+     * @return
+     */
+    @PostMapping("disconnect/{roomId}/{userId}")
+    public ApiResult disconnectUser(@PathVariable("roomId") String roomId,@PathVariable("userId") String userId){
+        ApiResult result = ApiResult.error();
+
+        try {
+            Room room = RoomChche.roomMap.get(roomId);
+
+            if(room != null ){
+                boolean outRoom = roomService.disConnectUser(room, userId);
+                if (outRoom){
+                    //断开通知
+                    JSONObject json = new JSONObject();
+                    json.put("userId", userId);
+                    roomService.sendRoomMessage(room, UserSocketMsgType.DISCONNECT ,json);
+                }
+                result.setdata(outRoom);
+            }
+
+        } catch (Exception e){
+            log.error(e.getMessage(), e);
+            result = ApiResult.error(e.getMessage());
+        }
         return result;
     }
 

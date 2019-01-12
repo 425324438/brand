@@ -87,6 +87,11 @@ websocket.onmessage = function(event){
         });
     }
 
+    //删除房间
+    if(obj.type === 'REMOVE_ROOM'){
+        $('#'+obj.roomId).remove();
+    }
+
 };
 
 //连接关闭的回调方法

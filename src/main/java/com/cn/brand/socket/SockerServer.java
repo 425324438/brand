@@ -40,7 +40,6 @@ public class SockerServer {
      */
     public static CopyOnWriteArraySet<SockerServer> webSocketSet = new CopyOnWriteArraySet<SockerServer>();
 
-    public static Map<String, User> users = new ConcurrentHashMap<>();
     /**
      * 存储socket Session，Session ID为键
      */
@@ -65,18 +64,18 @@ public class SockerServer {
         User user = new User();
         user.setSockerServer(this);
         user.setId(session.getId());
-        users.put(this.session.getId(), user);
+        RoomChche.users.put(this.session.getId(), user);
 
         //加入set中
         webSocketSet.add(this);
         //在线数加1
         addOnlineCount();
-        logger.info("有新连接加入！当前在线人数为" + users.size());
+        logger.info("有新连接加入！当前在线人数为" + RoomChche.users.size());
         try {
 
             JSONObject json = new JSONObject();
             json.put("sessionId", session.getId());
-            json.put("peopelNum", users.size());
+            json.put("peopelNum", RoomChche.users.size());
             //返回给用户端 sessionId
             sendMessage(JSONObject.toJSONString(json));
 
@@ -89,25 +88,29 @@ public class SockerServer {
     public void onMessage(String message, Session session) {
         logger.info("来自客户端的消息:" + message);
         JSONObject jsonObject = JSONObject.parseObject(message);
+        String roomId = jsonObject.getString("roomId");
+        Room room = RoomChche.roomMap.get(roomId);
+        String userId = jsonObject.getString("userId");
 
         try {
             String type = jsonObject.getString("type");
             switch (type){
                 // 抢地主
                 case BrandSendSocketMsgType.LANDLORD:
-                    String roomId = jsonObject.getString("roomId");
-                    String userId = jsonObject.getString("userId");
                     Integer multiple = jsonObject.getInteger("multiple");
 
-                    Room room = RoomChche.roomMap.get(roomId);
+
                     JSONObject msg = new JSONObject();
                     msg.put("userId", userId);
                     msg.put("multiple", multiple);
                     roomService.sendRoomMessage(room, RoomSendSocketMsgType.ROOM_MSG ,msg);
                     roomService.robLandlord(roomId, userId, multiple);
                     break;
-                    default:
-                        break;
+                case BrandSendSocketMsgType.SEND_BRAND_MSG:
+
+                    break;
+                default:
+                    break;
             }
 
         } catch (Exception e) {
@@ -126,11 +129,12 @@ public class SockerServer {
     public void onClose() {
         //从set中删除
         webSocketSet.remove(this);
+        String id = this.session.getId();
         //在线数减1
         subOnlineCount();
-        users.remove(this.session.getId());
-        map.remove(this.session.getId());
-        logger.info("有一连接关闭！当前在线人数为" + users.size());
+        RoomChche.users.remove(id);
+        map.remove(id);
+        logger.info("有一连接关闭！当前在线人数为" + RoomChche.users.size());
     }
 
 
@@ -141,7 +145,7 @@ public class SockerServer {
     public void onError(Session session, Throwable error) {
         logger.error("发生错误");
         logger.error(error.toString(), error);
-        users.remove(session.getId());
+        RoomChche.users.remove(session.getId());
         map.remove(session.getId());
     }
 

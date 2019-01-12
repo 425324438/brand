@@ -8,10 +8,10 @@ $(function (e) {
 });
 
 function out(){
+    //用户断开连接
+    disconnect();
     //页面刷新是 清空
     sessionStorage.clear();
-    //退出房间
-    outRoom();
 
 }
 
@@ -117,7 +117,20 @@ function outRoom() {
         dataType:'json',
         success : function(data){
             console.log(data);
-            //TODO 主页面显示自己加入的房间
+        }
+    });
+}
+
+/**
+ * 用户断开连接
+ */
+function disconnect() {
+    $.ajax({
+        type : 'POST',
+        url :    '/room/disconnect/'+sessionStorage.roomKey+'/'+sessionStorage.sessionKey,
+        dataType:'json',
+        success : function(data){
+            console.log(data);
         }
     });
 }

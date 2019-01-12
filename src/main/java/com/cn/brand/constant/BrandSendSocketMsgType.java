@@ -22,6 +22,8 @@ public class BrandSendSocketMsgType {
      */
     public static final String LANDLORD = "landlord";
 
+    public static final String SEND_BRAND_MSG = "sendBrandMsg";
+
     /**
      * 房间操作顺序
      */

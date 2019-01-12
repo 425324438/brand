@@ -33,6 +33,7 @@
     <button type="button" onclick="licensing()"> 开始发牌</button>
     <input id="multiple" type="text" value="1" placeholder="押注倍率">
     <button type="button" class="btn btn-default btn-lg" id="robLandlord" onclick="landlord(this)" disabled>抢地主</button>
+    <button type="button"  id="sendBrand" onclick="sendBrand(this)" disabled>出牌</button>
     <div>
         <p>
             <span>用户信息：</span>
@@ -55,6 +56,14 @@
                 <!--<div class="layui-row layui-col-space5" id="brandList">-->
                 <!--</div>-->
                 <ul id="brandList" style="position: absolute;">
+
+                </ul>
+            </div>
+        </div>
+        <div>
+            <p>出牌</p>
+            <div class="layui-fluid">
+                <ul id="brandMsg" style="position: absolute;">
 
                 </ul>
             </div>

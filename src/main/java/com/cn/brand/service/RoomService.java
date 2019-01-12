@@ -46,6 +46,14 @@ public interface RoomService {
     boolean outRoom(Room room, User user);
 
     /**
+     * 用户断开连接
+     * @param room
+     * @param userId
+     * @return
+     */
+    boolean disConnectUser(Room room, String userId);
+
+    /**
      * 抢地主
      * @param roomId
      * @param userId

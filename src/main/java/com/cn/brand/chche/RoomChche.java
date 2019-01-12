@@ -24,4 +24,9 @@ public class RoomChche {
      */
     public static Map<String, User> userRoom = new Hashtable<>();
 
+    /**
+     * 所有socket 用户
+     */
+    public static Map<String, User> users = new ConcurrentHashMap<>();
+
 }

@@ -9,6 +9,7 @@ import com.cn.brand.model.User;
 import com.cn.brand.service.BrandService;
 import com.cn.brand.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -88,10 +89,18 @@ public class BrandServiceImpl implements BrandService {
             room.setCurrentUser(room.getMasterUser());
         } else {
             Iterator<User> iterator = room.getUsers().iterator();
+            User onuser = null;
             while (iterator.hasNext()){
                 User user = iterator.next();
+                if(onuser == null){
+                    onuser = user;
+                }
                 if(room.getCurrentUser().getId().equals(user.getId())){
-                    room.setCurrentUser(iterator.next());
+                    if(iterator.hasNext()){
+                        room.setCurrentUser(iterator.next());
+                    } else {
+                        room.setCurrentUser(onuser);
+                    }
                 }
             }
         }

@@ -2,8 +2,9 @@
 
 function msg(event) {
     var obj = JSON.parse(event.data);
+    var html = '<p><b>'+ CurentTime() +':系统：';
     if(obj.type === 'addRoom'){
-        var html = '<p><b>系统：</b>有新的用户加入，用户ID：'+ obj.userId +'，现有人数'+ obj.userList +'</p>';
+         html += '</b>有新的用户加入，用户ID：'+ obj.userId +'，现有人数'+ obj.userList +'</p>';
         $('#room_msg').append(html);
 
     } else if(obj.type === undefined){
@@ -13,12 +14,13 @@ function msg(event) {
         if(obj.msg.sequenceUserId === sessionStorage.sessionKey){
             $('#robLandlord').removeAttr('disabled');
         }
-        var html = '<p><b>系统：</b>【顺序操作】用户ID：'+ obj.msg.sequenceUserId +'</p>';
+        html += '</b>【顺序操作】用户ID：'+ obj.msg.sequenceUserId +'</p>';
         $('#room_msg').append(html);
     }
 
     else {
-        $('#room_msg').append('<p><b>系统：</b>'+ event.data +'</p>');
+        html += '</b>'+ event.data +'</p>';
+        $('#room_msg').append(html);
     }
 
     $("#room_msg").getNiceScroll().resize();
@@ -28,4 +30,35 @@ function msg(event) {
 function setPos() {
     var div = document.getElementById('room_msg');
     div.scrollTop = div.scrollHeight;
+}
+
+function CurentTime() {
+    var now = new Date();
+
+    var year = now.getFullYear();       //年
+    var month = now.getMonth() + 1;     //月
+    var day = now.getDate();            //日
+
+    var hh = now.getHours();            //时
+    var mm = now.getMinutes();          //分
+
+    var clock = year + "-";
+
+    if(month < 10)
+        clock += "0";
+
+    clock += month + "-";
+
+    if(day < 10)
+        clock += "0";
+
+    clock += day + " ";
+
+    if(hh < 10)
+        clock += "0";
+
+    clock += hh + ":";
+    if (mm < 10) clock += '0';
+    clock += mm;
+    return(clock);
 }
