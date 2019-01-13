@@ -44,3 +44,8 @@ a {
 .room-msg .bottom{
     text-align: end;
 }
+
+.brand{
+    border: 1px black solid;
+    height: 100px;
+}

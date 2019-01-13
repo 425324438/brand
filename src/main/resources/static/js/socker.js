@@ -10,17 +10,14 @@ else{
     alert('不支持 websocket');
 }
 
-//连接发生错误的回调方法
 websocket.onerror = function(){
     console.log('连接发送错误');
 };
 
-//连接成功建立的回调方法
 websocket.onopen = function(event){
     console.log("连接建立成功");
 };
 
-//接收到消息的回调方法
 websocket.onmessage = function(event){
     console.log("收到消息："+ event.data);
     layer.msg('收到socket消息：'+ event.data , { icon:1, offset: ['20%', '60%'] });
@@ -37,18 +34,9 @@ websocket.onmessage = function(event){
     //开始发牌
     if(obj.type === 'licensingAction'){
         $(obj.brands).each(function (index, brand) {
-            var html = '<li class="brandList">\n' +
-                '            <div class="">' +
-                '<div class="" style="border: 1px black solid; height: 100px;">\n' +
-                '                  <div class="">id=：<span>'+ brand.id +'</span></div>\n' +
-                '                  <div class="">\n' +
-                '                    type=<span>'+ brand.type +'</span><br>\n' +
-                '                    val= <spa>'+ brand.val +'</spa>\n' +
-                '                  </div>\n' +
-                '                </div>' +
-                '</div>\n' +
-                '            </li>';
-            $('#brandList').append(html);
+
+            var bra = new Brand(brand);
+            $('#brandList').append(bra.createBrandLiHtml());
         });
     }
     //抢地主
@@ -56,18 +44,9 @@ websocket.onmessage = function(event){
         //地主的牌
         if(obj.msg.IsLandlordUserId === sessionStorage.sessionKey){
             $(obj.msg.bottomBrand).each(function (index, brand) {
-                var html = '<li class="brandList">\n' +
-                    '            <div class="">' +
-                    '<div class="" style="border: 1px black solid; height: 100px;">\n' +
-                    '                  <div class="">id=：<span>'+ brand.id +'</span></div>\n' +
-                    '                  <div class="">\n' +
-                    '                    type=<span>'+ brand.type +'</span><br>\n' +
-                    '                    val= <spa>'+ brand.val +'</spa>\n' +
-                    '                  </div>\n' +
-                    '                </div>' +
-                    '</div>\n' +
-                    '            </li>';
-                $('#brandList').append(html);
+
+                var bra = new Brand(brand);
+                $('#brandList').append(bra.createBrandLiHtml());
             });
         }
         // 底牌公示区域
@@ -87,7 +66,6 @@ websocket.onmessage = function(event){
         });
     }
 
-    //删除房间
     if(obj.type === 'REMOVE_ROOM'){
         $('#'+obj.roomId).remove();
     }
