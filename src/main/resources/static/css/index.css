@@ -9,10 +9,10 @@ a {
     background: #fff;
     width: 100px;
 }
-.brandList:hover {
-    margin-top : -10px;
-}
-.brandList:active {
+/*.brandList:hover {*/
+    /*margin-top : -10px;*/
+/*}*/
+.brandList-active {
     margin-top : -10px;
     background: aquamarine;
 }

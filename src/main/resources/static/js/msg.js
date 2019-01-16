@@ -2,7 +2,7 @@
 
 function msg(event) {
     var obj = JSON.parse(event.data);
-    var html = '<p><b>'+ CurentTime() +':系统：';
+    var html = '<p><b>【系统】'+ CurentTime() +'：';
     if(obj.type === 'addRoom'){
          html += '</b>有新的用户加入，用户ID：'+ obj.userId +'，现有人数'+ obj.userList +'</p>';
         $('#room_msg').append(html);

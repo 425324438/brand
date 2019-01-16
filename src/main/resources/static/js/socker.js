@@ -33,11 +33,13 @@ websocket.onmessage = function(event){
     }
     //开始发牌
     if(obj.type === 'licensingAction'){
-        $(obj.brands).each(function (index, brand) {
+        var types = orderBy(obj.brands, ['val'], 'desc');
+        $(types.results).each(function (index, brand) {
 
             var bra = new Brand(brand);
             $('#brandList').append(bra.createBrandLiHtml());
         });
+        brandsAddClick();
     }
     //抢地主
     if(obj.type === 'landlord'){
@@ -53,17 +55,18 @@ websocket.onmessage = function(event){
         $(obj.msg.bottomBrand).each(function (index, brand) {
             var html = '<div class="layui-col-sm3">\n' +
                 '            <div class="grid-demo grid-demo-bg1">' +
-                '<div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
+                '               <div class="layui-card" style="border: 1px black solid; padding: 10px; height: 100px;">\n' +
                 '                  <div class="layui-card-header">id=：<span>'+ brand.id +'</span></div>\n' +
                 '                  <div class="layui-card-body">\n' +
                 '                    type=<span>'+ brand.type +'</span><br>\n' +
                 '                    val= <spa>'+ brand.val +'</spa>\n' +
                 '                  </div>\n' +
                 '                </div>' +
-                '</div>\n' +
-                '            </div>';
+                '            </div>\n' +
+                '      </div>';
             $('#bottomBrand').append(html);
         });
+        brandsAddClick();
     }
 
     if(obj.type === 'REMOVE_ROOM'){

@@ -37,8 +37,7 @@ class Brand {
 
     createBrandLiHtml() {
 
-        var html =  ' id='+ this.id +'<br/>' +
-                    ' type='+ this.type +'<br/>' +
+        var html =  ' 【type='+ this.type +'】' +
                     ' val='+ this.val ;
 
         var input = document.createElement('input');
@@ -63,6 +62,40 @@ class Brand {
 
         return li.outerHTML;
     }
+}
+
+var sendBrand = new Array();
+
+/**
+ * 用户出牌
+ */
+function send() {
 
 }
 
+function pushSendBrandArray(brand) {
+    sendBrand.push(brand);
+}
+
+function removeSendBrandArray(brand) {
+    var index = sendBrand.indexOf(brand);
+    if (index > -1) {
+        sendBrand.splice(index, 1);
+    }
+}
+
+function brandsAddClick() {
+    $('#brandList li').on('click',function(ev){
+        var val = $(this).find("input:hidden").val();
+        var className = $(this)[0].className;
+
+        if(className.indexOf('brandList-active') !== -1){
+            removeSendBrandArray(val);
+        } else {
+            pushSendBrandArray(val);
+        }
+
+        $(this).toggleClass("brandList-active");
+        console.log(sendBrand);
+    });
+}
