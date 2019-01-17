@@ -1,5 +1,6 @@
 package com.cn.brand.enums;
 
+
 /**
  * @author: ylshi@ronglian.com
  * @Date: 2018/12/30 15:56

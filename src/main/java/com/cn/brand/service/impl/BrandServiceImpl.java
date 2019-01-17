@@ -1,7 +1,7 @@
 package com.cn.brand.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.brand.Util.BreanUtils;
+import com.cn.brand.Util.BrandUtils;
 import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.BrandSendSocketMsgType;
 import com.cn.brand.model.Brand;
@@ -10,7 +10,6 @@ import com.cn.brand.model.User;
 import com.cn.brand.service.BrandService;
 import com.cn.brand.service.RoomService;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -47,7 +46,7 @@ public class BrandServiceImpl implements BrandService {
             List<User> users = room.getUsers();
             List<Brand> brand = room.getBrands().getBrands();
 
-            List<Brand> shuffle = BreanUtils.shuffle(brand);
+            List<Brand> shuffle = BrandUtils.shuffle(brand);
             for(int i = shuffle.size()-1 ; i >= 0;){
                 if(i <= 3){
                     if(CollectionUtils.isEmpty(room.getBottomBrand())){
@@ -138,6 +137,7 @@ public class BrandServiceImpl implements BrandService {
             return true;
         }
         //两个不同的用户对比出牌的大小
+        List<Brand> roomCurrentBrands = room.getCurrentUser().getCurrentBrands();
 
         return true;
     }

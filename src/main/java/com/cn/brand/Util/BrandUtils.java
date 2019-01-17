@@ -9,7 +9,7 @@ import java.util.List;
  * @Date: 2019/1/1 14:19
  * @Description:
  */
-public class BreanUtils {
+public class BrandUtils {
 
     /**
      * 洗牌算法
@@ -29,5 +29,10 @@ public class BreanUtils {
             }
         }
         return array;
+    }
+
+    public static String getBrandsType(List<Brand> brands){
+
+        return "";
     }
 }
