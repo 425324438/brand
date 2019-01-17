@@ -1,12 +1,15 @@
 package com.cn.brand.socket;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.brand.Util.SpringUtil;
 import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.BrandSendSocketMsgType;
 import com.cn.brand.constant.RoomSendSocketMsgType;
+import com.cn.brand.model.Brand;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
+import com.cn.brand.service.BrandService;
 import com.cn.brand.service.RoomService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -53,6 +57,8 @@ public class SockerServer {
 
     @Autowired
     private RoomService roomService = (RoomService)SpringUtil.getBean("roomService");
+    @Autowired
+    private BrandService brandService = (BrandService) SpringUtil.getBean("brandService");
     /**
      * 连接建立成功调用的方法
      */
@@ -89,8 +95,8 @@ public class SockerServer {
         logger.info("来自客户端的消息:" + message);
         JSONObject jsonObject = JSONObject.parseObject(message);
         String roomId = jsonObject.getString("roomId");
-        Room room = RoomChche.roomMap.get(roomId);
         String userId = jsonObject.getString("userId");
+        Room room = RoomChche.roomMap.get(roomId);
 
         try {
             String type = jsonObject.getString("type");
@@ -98,15 +104,16 @@ public class SockerServer {
                 // 抢地主
                 case BrandSendSocketMsgType.LANDLORD:
                     Integer multiple = jsonObject.getInteger("multiple");
-
-
                     JSONObject msg = new JSONObject();
                     msg.put("userId", userId);
                     msg.put("multiple", multiple);
                     roomService.sendRoomMessage(room, RoomSendSocketMsgType.ROOM_MSG ,msg);
                     roomService.robLandlord(roomId, userId, multiple);
                     break;
+                // 用户发牌
                 case BrandSendSocketMsgType.SEND_BRAND_MSG:
+                    List<Brand> brand = JSONArray.parseArray(jsonObject.getString("Brand"), Brand.class);
+                    boolean compare = brandService.compareUserSendBrand(room, userId, brand);
 
                     break;
                 default:

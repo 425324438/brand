@@ -9,5 +9,5 @@ public class UserSocketMsgType {
 
     public static final String DISCONNECT = "disConnect";
 
-    public static final String MSG = "MSG";
+    public static final String MSG = "msg";
 }

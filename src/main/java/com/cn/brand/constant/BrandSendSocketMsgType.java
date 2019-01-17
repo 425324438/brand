@@ -22,6 +22,9 @@ public class BrandSendSocketMsgType {
      */
     public static final String LANDLORD = "landlord";
 
+    /**
+     * 用户发牌
+     */
     public static final String SEND_BRAND_MSG = "sendBrandMsg";
 
     /**

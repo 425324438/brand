@@ -30,4 +30,10 @@ public interface BrandService {
      */
     void roomSequence(Room room);
 
+    /**
+     * 比较用户发的牌
+     * @return
+     */
+    boolean compareUserSendBrand(Room room, String userId, List<Brand> brands);
+
 }

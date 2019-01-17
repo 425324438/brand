@@ -41,4 +41,9 @@ public class User {
      * 用户手中的 牌
      */
     private List<Brand> brands;
+
+    /**
+     * 用户出牌
+     */
+    private List<Brand> currentBrands;
 }

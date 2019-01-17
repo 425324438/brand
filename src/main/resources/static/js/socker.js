@@ -100,12 +100,18 @@ function closeWebSocket(){
  */
 function landlord(_this) {
     $(_this).button('reset');
-    var json = {};
-    json.type = 'landlord';
-    json.roomId = sessionStorage.roomKey;
-    json.userId = sessionStorage.sessionKey;
+
+    var json = socketSendJson('landlord');
     json.multiple = $('#multiple').val();
 
     websocket.send(JSON.stringify(json));
     $(_this).attr('disabled', 'disabled');
+}
+
+function socketSendJson(type) {
+    var json = {};
+    json.type = 'landlord';
+    json.roomId = sessionStorage.roomKey;
+    json.userId = sessionStorage.sessionKey;
+    return json;
 }

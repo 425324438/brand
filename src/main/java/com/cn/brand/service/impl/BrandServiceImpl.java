@@ -2,6 +2,7 @@ package com.cn.brand.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.brand.Util.BreanUtils;
+import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.BrandSendSocketMsgType;
 import com.cn.brand.model.Brand;
 import com.cn.brand.model.Room;
@@ -13,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.thymeleaf.util.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
@@ -104,10 +106,40 @@ public class BrandServiceImpl implements BrandService {
                 }
             }
         }
-
         json.put("sequenceUserId", room.getCurrentUser().getId());
-
         roomService.sendRoomMessage(room, BrandSendSocketMsgType.ROOM_SEQUENCE, json);
+    }
+
+    /**
+     * 比较用户发的牌
+     * @return
+     */
+    @Override
+    public boolean compareUserSendBrand(Room room, String userId, List<Brand> brands){
+        //没有出牌直接操作下一个出牌人
+        if(CollectionUtils.isEmpty(brands)){
+            this.roomSequence(room);
+            return true;
+        }
+        User user = RoomChche.users.get(userId);
+        //第一个出牌的用户直接返回 true
+        if (CollectionUtils.isEmpty(room.getCurrentUser().getCurrentBrands())){
+            user.setCurrentBrands(brands);
+            room.setCurrentUser(user);
+            return true;
+        }
+        return compareBrands(room, user, brands);
+    }
+
+    public boolean compareBrands(Room room, User user, List<Brand> brands){
+        //先对比是不是同一个用户发来的牌。如果是，直接返回 true
+        String currentUserId = room.getCurrentUser().getId();
+        if(StringUtils.equals(currentUserId, user.getId())){
+            return true;
+        }
+        //两个不同的用户对比出牌的大小
+
+        return true;
     }
 
     /**

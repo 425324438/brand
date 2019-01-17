@@ -71,6 +71,10 @@ var sendBrand = new Array();
  */
 function send() {
 
+    var json = socketSendJson('sendBrand');
+    json.Brand = sendBrand;
+    json.brandType = '三代一';
+    websocket.send(JSON.stringify(json));
 }
 
 function pushSendBrandArray(brand) {
