@@ -6,6 +6,8 @@ import com.cn.brand.Util.SpringUtil;
 import com.cn.brand.chche.RoomChche;
 import com.cn.brand.constant.BrandSendSocketMsgType;
 import com.cn.brand.constant.RoomSendSocketMsgType;
+import com.cn.brand.dto.LoginDto;
+import com.cn.brand.dto.SocketDataPackage;
 import com.cn.brand.model.Brand;
 import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
@@ -25,6 +27,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author: ylshi@ronglian.com
@@ -39,7 +42,7 @@ public class SockerServer {
     /**
      * 静态变量，用来记录当前在线连接数。应该把它设计成线程安全的。
      */
-    private static volatile int onlineCount = 0;
+    private static volatile AtomicInteger onlineCount = new AtomicInteger(0);
     /**
      * concurrent包的线程安全Set，用来存放每个客户端对应的MyWebSocket对象。
      */
@@ -88,6 +91,12 @@ public class SockerServer {
             JSONObject json = new JSONObject();
             json.put("sessionId", session.getId());
             json.put("peopelNum", RoomChche.users.size());
+
+            LoginDto loginDto = new LoginDto();
+            loginDto.setSessionId(session.getId());
+            loginDto.setPeopelNum(RoomChche.users.size());
+
+
             //返回给用户端 sessionId
             sendMessage(JSONObject.toJSONString(json));
 
@@ -195,6 +204,25 @@ public class SockerServer {
         }
     }
 
+    /**
+     * 发送信息
+     * @param message
+     * @throws IOException
+     */
+    public void sendMessage(Object message, String type){
+        SocketDataPackage socketDataPackage = new SocketDataPackage();
+        try {
+            socketDataPackage.setMsgType(type);
+            socketDataPackage.setResponse(message);
+            if (this.session.isOpen()){
+                this.session.getBasicRemote().sendText(JSONObject.toJSONString(socketDataPackage));
+            }
+        } catch (Exception e){
+            logger.error(e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 
 
 
@@ -202,16 +230,16 @@ public class SockerServer {
         return this.session;
     }
 
-    public static synchronized int getOnlineCount() {
+    public static AtomicInteger getOnlineCount() {
         return onlineCount;
     }
 
-    public static synchronized void addOnlineCount() {
-        SockerServer.onlineCount++;
+    public static void addOnlineCount() {
+        SockerServer.onlineCount.incrementAndGet();
     }
 
-    public static synchronized void subOnlineCount() {
-        SockerServer.onlineCount--;
+    public static void subOnlineCount() {
+        SockerServer.onlineCount.decrementAndGet();
     }
 
 
