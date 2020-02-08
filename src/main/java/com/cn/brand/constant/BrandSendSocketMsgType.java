@@ -3,10 +3,13 @@ package com.cn.brand.constant;
 /**
  * @author: ylshi@ronglian.com
  * @Date: 2019/1/1 14:29
- * @Description:
+ * @Description: socket 通信消息类型
  */
 public class BrandSendSocketMsgType {
 
+    /******** ***** ***** ***** ***** ***** ***** ***** ***** ***** */
+    /******** ***** ***** ***** 房间主要操作 ***** ***** ***** ***** ***** */
+    /******** ***** ***** ***** ***** ***** ***** ***** ***** ***** */
     /**
      * 开始发牌
      */
@@ -31,4 +34,12 @@ public class BrandSendSocketMsgType {
      * 房间操作顺序
      */
     public static final String ROOM_SEQUENCE = "roomSequence";
+
+
+
+    /******** ***** ***** ***** ***** ***** ***** ***** ***** ***** */
+    /******** ***** ***** ***** 聊天窗口 ***** ***** ***** ***** ***** */
+    /******** ***** ***** ***** ***** ***** ***** ***** ***** ***** */
+    public static final String ROOM_USER_MSG = "room_user_msg";
+
 }

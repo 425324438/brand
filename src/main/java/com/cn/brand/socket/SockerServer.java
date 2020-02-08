@@ -11,6 +11,7 @@ import com.cn.brand.model.Room;
 import com.cn.brand.model.User;
 import com.cn.brand.service.BrandService;
 import com.cn.brand.service.RoomService;
+import com.sun.org.apache.bcel.internal.generic.BREAKPOINT;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,10 +56,15 @@ public class SockerServer {
     private Session session;
 
 
+//    @Autowired
+//    private RoomService roomService = (RoomService)SpringUtil.getBean("roomService");
+//    @Autowired
+//    private BrandService brandService = (BrandService) SpringUtil.getBean("brandService");
+
     @Autowired
-    private RoomService roomService = (RoomService)SpringUtil.getBean("roomService");
+    private RoomService roomService ;
     @Autowired
-    private BrandService brandService = (BrandService) SpringUtil.getBean("brandService");
+    private BrandService brandService ;
     /**
      * 连接建立成功调用的方法
      */
@@ -110,10 +116,14 @@ public class SockerServer {
                     roomService.sendRoomMessage(room, RoomSendSocketMsgType.ROOM_MSG ,msg);
                     roomService.robLandlord(roomId, userId, multiple);
                     break;
-                // 用户发牌
+                // 开始打牌-用户发牌
                 case BrandSendSocketMsgType.SEND_BRAND_MSG:
                     List<Brand> brand = JSONArray.parseArray(jsonObject.getString("Brand"), Brand.class);
                     boolean compare = brandService.compareUserSendBrand(room, userId, brand);
+
+                    break;
+                //房间内用户消息
+                case BrandSendSocketMsgType.ROOM_USER_MSG:
 
                     break;
                 default:

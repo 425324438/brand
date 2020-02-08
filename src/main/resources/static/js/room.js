@@ -4,7 +4,6 @@ $(function (e) {
         out();
         return true;
     });
-
 });
 
 function out(){

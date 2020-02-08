@@ -3,28 +3,51 @@
 function msg(event) {
     var obj = JSON.parse(event.data);
     var html = '<p><b>【系统】'+ CurentTime() +'：';
-    if(obj.type === 'addRoom'){
-         html += '</b>有新的用户加入，用户ID：'+ obj.userId +'，现有人数'+ obj.userList +'</p>';
-        $('#room_msg').append(html);
+    switch (obj.type) {
+        //用户加入房间
+        case "addRoom" :
+            html += '</b>有新的用户加入，用户ID：'+ obj.userId +'，现有人数'+ obj.userList +'</p>';
+            $('#room_msg').append(html);
+            break;
+        //房间操作消息
+        case "roomSequence":
+            if(obj.msg.sequenceUserId === sessionStorage.sessionKey){
+                $('#robLandlord').removeAttr('disabled');
+            }
+            html += '</b>【顺序操作】用户ID：'+ obj.msg.sequenceUserId +'</p>';
+            $('#room_msg').append(html);
+            break;
+        //用户发送消息
+        case "room_user_msg":
+            html = '';
+            html = '<p><b>【房间】'+ CurentTime() +'：';
+            html += '</b>'+ event.data.msg +'</p>';
+            $('#room_msg').append(html);
+            break;
+        //用户登录 刷新用户ID
+        case undefined:
+            $('#userDetail').append('用户ID：'+obj.sessionId);
+            break;
+        default:
 
-    } else if(obj.type === undefined){
-        $('#userDetail').append('用户ID：'+obj.sessionId);
-
-    } else if(obj.type === 'roomSequence'){
-        if(obj.msg.sequenceUserId === sessionStorage.sessionKey){
-            $('#robLandlord').removeAttr('disabled');
-        }
-        html += '</b>【顺序操作】用户ID：'+ obj.msg.sequenceUserId +'</p>';
-        $('#room_msg').append(html);
+            break;
     }
-
-    else {
-        html += '</b>'+ event.data +'</p>';
-        $('#room_msg').append(html);
-    }
-
     $("#room_msg").getNiceScroll().resize();
     setPos();
+}
+
+
+function sendMsg() {
+    var val = $('#msg_Text').val();
+    var event = {
+        data : {
+            type : "room_user_msg",
+            msg: val
+        }
+    };
+    // msg(event);
+    websocket.send(JSON.stringify(event));
+    $('#msg_Text').val('');
 }
 
 function setPos() {
